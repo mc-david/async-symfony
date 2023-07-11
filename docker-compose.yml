@@ -9,6 +9,12 @@ services:
 
 ###> doctrine/doctrine-bundle ###
   database:
+    image: 'mysql:8.0'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: main
     ports:
-      - "5432"
+      - "3306"
 ###< doctrine/doctrine-bundle ###

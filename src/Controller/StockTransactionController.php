@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Message\PurchaseConfirmationNotification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,7 +30,7 @@ class StockTransactionController extends AbstractController
             }
         };
 
-        $bus->dispatch(new PurchaseConfirmationNotification($order));
+        $bus->dispatch(new PurchaseConfirmationNotification($order->getId()));
 
         return $this->render('stocks/example.html.twig');
     }

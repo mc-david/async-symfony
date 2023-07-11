@@ -12,8 +12,6 @@ use Symfony\Component\Mime\Email;
 #[AsMessageHandler]
 class PurchaseConfirmationNotificationHandler
 {
-
-
     public function __construct(private MailerInterface $mailer)
     {
     }
@@ -23,15 +21,15 @@ class PurchaseConfirmationNotificationHandler
         echo 'Creating a PDF contract note ...<br>';
 
         $mpdf = new Mpdf();
-        $content = "<h1>Contract Note for Order {$notification->getOrder()->getId()}</h1>";
+        $content = "<h1>Contract Note for Order {$notification->getOrderId()}</h1>";
         $content .= '<p>Total: <b>$1898.75</b></p>';
         $mpdf->writeHtml($content);
         $contractNotePdf = $mpdf->output('', 'S' );
 
         $email = (new Email())
             ->from('sales@stocksapp.com')
-            ->to($notification->getOrder()->getBuyer()->getEmail())
-            ->subject('Contract note for order ' . $notification->getOrder()->getId())
+            ->to('email@example.tech')
+            ->subject('Contract note for order ' . $notification->getOrderId())
             ->text('Here is your contract note!')
             ->attach($contractNotePdf, 'contract-note.pdf');
 

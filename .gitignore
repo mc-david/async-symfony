@@ -178,4 +178,6 @@ fabric.properties
 
 .phpunit.result.cache
 
-docher-compose.override.yml
+docker-compose.override.yml
+
+mysql
