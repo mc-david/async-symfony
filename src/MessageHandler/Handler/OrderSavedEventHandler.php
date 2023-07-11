@@ -1,27 +1,25 @@
 <?php
 
-namespace App\MessageHandler;
+namespace App\MessageHandler\Handler;
 
-use App\Message\PurchaseConfirmationNotification;
+use App\Message\Event\OrderSavedEvent;
 use Mpdf\Mpdf;
-use Symfony\Component\Mailer\EventListener\MessageLoggerListener;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Email;
 
 #[AsMessageHandler]
-class PurchaseConfirmationNotificationHandler
+class OrderSavedEventHandler
 {
+
     public function __construct(private MailerInterface $mailer)
     {
     }
 
-    public function __invoke(PurchaseConfirmationNotification $notification)
+    public function __invoke(OrderSavedEvent $event)
     {
-        echo 'Creating a PDF contract note ...<br>';
-
         $mpdf = new Mpdf();
-        $content = "<h1>Contract Note for Order {$notification->getOrderId()}</h1>";
+        $content = "<h1>Contract Note for Order {$event->getOrderId()}</h1>";
         $content .= '<p>Total: <b>$1898.75</b></p>';
         $mpdf->writeHtml($content);
         $contractNotePdf = $mpdf->output('', 'S' );
@@ -29,7 +27,7 @@ class PurchaseConfirmationNotificationHandler
         $email = (new Email())
             ->from('sales@stocksapp.com')
             ->to('email@example.tech')
-            ->subject('Contract note for order ' . $notification->getOrderId())
+            ->subject('Contract note for order ' . $event->getOrderId())
             ->text('Here is your contract note!')
             ->attach($contractNotePdf, 'contract-note.pdf');
 
